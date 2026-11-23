@@ -269,7 +269,7 @@ def render():
     buckets = group(items)
     total = sum(skill_count(item) for item, _ in items)
     body = "\n".join([aurora_html(), '<div class="wrap">', constellation_html(items),
-                      hero_html(total, len(items), catalog["guide"], ticker_phrases(items), catalog.get("guides", [])),
+                      hero_html(total, sum(1 for _, ext in items if not ext), catalog["guide"], ticker_phrases(items), catalog.get("guides", [])),
                       course_html(catalog.get("course")),
                       featured_html(items, catalog.get("featured", [])),
                       install_all_html(total),
