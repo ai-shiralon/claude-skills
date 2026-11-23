@@ -1,0 +1,440 @@
+/* Shared stylesheet for the hub and every skill page.
+   AI Transformation palette: warm night base, cream text, coral accent,
+   pastel chips; motion follows Apple/Fluid: instant press feedback,
+   short ease-out, reduced-motion aware. */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#11131B; --card:#1A1D28; --card-2:#212534;
+  --ink:#FBF4EA; --muted:#B9B0A4; --gold:#EE9A70; --line:#2B3042; --green:#2F8F6B;
+  --coral:#EE9A70; --coral-deep:#B9481F;
+  --sky:#BDD9F2; --lilac:#D9CBF0; --mint:#C4E8D4; --yellow:#F5E6B8;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:96px}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:100%/1.65 "Assistant",system-ui,Arial,Helvetica,sans-serif; font-size:16px;
+}
+.wrap{position:relative; max-width:1040px; margin:0 auto; padding-inline:20px; padding-block:0 90px}
+a{color:var(--gold)}
+p{margin:0 0 14px}
+code{background:var(--card-2); padding:2px 6px; border-radius:5px;
+  font-family:Consolas,Menlo,monospace; font-size:.9em; direction:ltr; display:inline-block}
+.muted{color:var(--muted)}
+[hidden]{display:none !important}
+
+/* ---------- entrance: short stagger, decorative only ---------- */
+@keyframes rise{to{opacity:1; transform:none}}
+.rise{opacity:0; transform:translateY(10px); animation:rise .5s var(--ease-out) forwards}
+.hero .rise:nth-child(2){animation-delay:50ms}
+.hero .rise:nth-child(3){animation-delay:300ms}
+.hero .rise:nth-child(4){animation-delay:380ms}
+.hero .rise:nth-child(5){animation-delay:460ms}
+.hero .rise:nth-child(6){animation-delay:540ms}
+
+/* ---------- hero ---------- */
+.hero{padding-block:64px 18px; max-width:760px}
+.eyebrow{color:var(--gold); font-weight:600; margin:0 0 10px}
+h1{font-size:clamp(2rem,5.4vw,3.1rem); line-height:1.08; letter-spacing:-.02em; margin:0 0 14px; font-weight:800; font-family:"Rubik","Assistant",sans-serif}
+.sub{color:var(--muted); font-size:1.08rem; max-width:62ch}
+h2{font-size:1.35rem; letter-spacing:-.01em; margin:46px 0 16px; font-weight:700; font-family:"Rubik","Assistant",sans-serif}
+h3{font-size:1rem; margin:0 0 10px; color:var(--gold); font-weight:600}
+.stats{display:flex; flex-wrap:wrap; gap:8px 22px; color:var(--muted); margin:18px 0 22px}
+.stats b{color:var(--ink); font-size:1.25rem; font-variant-numeric:tabular-nums; margin-inline-end:4px}
+
+/* ---------- guide banner ---------- */
+.guide{
+  display:flex; align-items:center; gap:16px; text-decoration:none; color:var(--ink);
+  background:linear-gradient(135deg,#2a1d17,#1A1D28 60%); border:1px solid #5a3422;
+  border-radius:var(--radius); padding:16px 20px;
+  transition:transform 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+.guide .ic{font-size:2rem; flex:none}
+.guide .d{color:var(--muted); font-size:.95rem}
+.guide .go{margin-inline-start:auto; color:var(--gold); font-size:1.3rem; flex:none}
+.guide:active{transform:scale(.985)}
+
+/* ---------- sticky translucent filter bar ---------- */
+.filterbar{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:5;
+  margin:34px -20px 0; padding:12px 20px;
+  background:rgba(17,19,27,.78);
+  -webkit-backdrop-filter:blur(18px) saturate(160%); backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.search{
+  width:100%; font:inherit; color:var(--ink); background:var(--card);
+  border:1px solid var(--line); border-radius:11px; padding:11px 14px; margin-bottom:10px;
+  transition:border-color 160ms var(--ease-out);
+}
+.search:focus{outline:none; border-color:var(--gold)}
+.chips{position:relative; overflow-x:auto; scrollbar-width:none; padding-bottom:2px}
+.chips-row{display:flex; gap:8px; width:max-content}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none; text-decoration:none; color:var(--ink); background:var(--card);
+  border:1px solid var(--line); border-radius:999px; padding:7px 14px; font-size:.92rem;
+  white-space:nowrap; transition:transform 120ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+.chip .n{color:var(--muted); font-variant-numeric:tabular-nums; margin-inline-start:2px}
+.chip:active{transform:scale(.95)}
+.chip[aria-pressed="true"]{background:var(--gold); color:#1a1407; border-color:var(--gold)}
+.chip[aria-pressed="true"] .n{color:#5a4a1a}
+.empty{margin-top:30px; color:var(--muted)}
+@media (min-width:760px){.chips{overflow:visible} .chips-row{flex-wrap:wrap; width:auto}}
+
+/* ---------- card grid ---------- */
+.cat h2 span{margin-inline-end:4px}
+.grid{list-style:none; padding:0; margin:0; display:grid; gap:14px;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.skill-card{
+  height:100%; display:flex; flex-direction:column; gap:6px; text-decoration:none; color:var(--ink);
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 18px 14px;
+  transition:transform 160ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+}
+.skill-card .ic{font-size:1.7rem; line-height:1}
+.skill-card .t{font-weight:700; font-size:1.08rem; letter-spacing:-.005em}
+.skill-card .d{color:var(--muted); font-size:.94rem; line-height:1.55}
+.skill-card .meta{margin-top:auto; padding-top:10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.skill-card .go{margin-inline-start:auto; color:var(--gold); transition:transform 200ms var(--ease-out)}
+.skill-card:active{transform:scale(.98)}
+.badge{font-size:.78rem; color:var(--gold); border:1px solid #4a3d18; border-radius:999px; padding:2px 9px}
+.badge.ext{color:var(--muted); border-color:var(--line)}
+
+@media (hover:hover) and (pointer:fine){
+  .skill-card:hover{border-color:#4a3d18; background:#1b1f27}
+  .skill-card:hover .go{transform:translateX(-4px)}
+  .guide:hover{border-color:var(--gold)}
+  .chip:hover{border-color:var(--gold)}
+  .btn:hover{filter:brightness(1.07)}
+  .btn.ghost:hover{border-color:var(--gold); color:var(--gold); filter:none}
+  .copybtn:hover{border-color:var(--gold)}
+}
+
+/* ---------- skill page ---------- */
+.crumbs{padding-top:26px; color:var(--muted); font-size:.93rem}
+.crumbs a{text-decoration:none}
+.crumbs .sep{margin-inline:6px; opacity:.5}
+.hero-skill{padding-top:30px}
+.skill-icon{font-size:3rem; line-height:1; margin-bottom:12px}
+.cta{display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 6px}
+.btn{
+  display:inline-block; background:var(--gold); color:#1a1407; text-decoration:none;
+  font-weight:700; padding:11px 20px; border-radius:11px; border:1px solid transparent;
+  transition:transform 160ms var(--ease-out), filter 160ms var(--ease-out);
+}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn:active{transform:scale(.97)}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin:0 0 14px}
+.prose{max-width:760px}
+.prose h3{margin-top:18px}
+section{max-width:820px}
+section.cat{max-width:none}
+ul.checks{list-style:none; padding:0; margin:0}
+ul.checks li{position:relative; padding-inline-start:26px; margin:8px 0}
+ul.checks li::before{content:"✓"; position:absolute; inset-inline-start:0; color:var(--green); font-weight:700}
+.says{list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:10px}
+.say{background:var(--card-2); border:1px solid var(--line); border-radius:12px; padding:9px 14px; font-weight:600}
+.ba{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.ba .card{margin:0}
+.ba .card.after{border-color:#3a4130}
+.sample{background:var(--card-2); border-radius:10px; padding:13px 15px; font-size:.93rem; line-height:1.75; color:#d8dde5; white-space:pre-line}
+.tbl{width:100%; border-collapse:collapse; font-size:.95rem}
+.tbl th,.tbl td{border-bottom:1px solid var(--line); padding:10px 8px; text-align:start; vertical-align:top}
+.tbl th{color:var(--gold); font-weight:600}
+.tbl tr:last-child td{border-bottom:none}
+.tag{color:var(--muted); font-size:.93rem; margin:12px 0 0}
+
+/* ---------- install block ---------- */
+.promptbox{position:relative}
+.copybtn{
+  position:absolute; inset-block-start:14px; inset-inline-end:14px;
+  background:#222833; color:var(--ink); border:1px solid var(--line); border-radius:9px;
+  padding:7px 14px; cursor:pointer; font:600 .85rem/1.4 inherit; font-family:inherit; min-width:82px;
+  transition:transform 120ms var(--ease-out), background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+.copybtn:active{transform:scale(.95)}
+.copybtn[data-done]{background:var(--green); color:#0f1115; border-color:var(--green)}
+pre{white-space:pre-wrap; word-wrap:break-word; margin:0; padding:46px 4px 4px;
+  font-size:.92rem; line-height:1.8; font-family:inherit; color:#dfe4ec; text-align:start}
+pre.ltr{direction:ltr; text-align:left; font-family:Consolas,Menlo,monospace; font-size:.88rem}
+details.alt{margin-top:6px}
+details.alt summary{cursor:pointer; color:var(--muted); padding:8px 0}
+details.alt[open] summary{margin-bottom:10px}
+.back{margin-top:40px}
+
+/* ---------- footer ---------- */
+.foot{margin-top:56px; padding-top:22px; border-top:1px solid var(--line); color:var(--muted); font-size:.94rem}
+.brand{color:var(--gold); font-weight:600}
+
+@media (max-width:700px){
+  .ba{grid-template-columns:1fr}
+  .hero{padding-top:44px}
+  .guide{padding:14px 16px}
+}
+
+/* ---------- accessibility ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rise{opacity:1; transform:none; animation:none}
+  *{transition-duration:.01ms !important}
+}
+@media (prefers-reduced-transparency:reduce){
+  .filterbar{background:var(--bg); -webkit-backdrop-filter:none; backdrop-filter:none}
+}
+@media (prefers-contrast:more){
+  .card,.skill-card,.chip{border-color:#5a6473}
+  .sub,.muted,.tag,.foot,.skill-card .d{color:#c6ccd6}
+}
+
+/* =====================================================================
+   Motion layer. Everything that starts hidden is gated on .js, so the
+   page is fully visible without JS. Only transform/opacity/clip-path move.
+   ===================================================================== */
+
+/* ---------- aurora: pre-blurred gradients drifting behind the hero ---------- */
+body{position:relative; overflow-x:hidden}
+.aurora{
+  position:absolute; inset-inline:0; inset-block-start:0; height:760px; z-index:0;
+  overflow:hidden; pointer-events:none;
+  -webkit-mask-image:linear-gradient(#000 55%,transparent); mask-image:linear-gradient(#000 55%,transparent);
+}
+.aurora.dim{height:520px; opacity:.55}
+.aurora i{
+  position:absolute; width:560px; height:560px; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,211,110,.20),rgba(255,211,110,0) 64%);
+  animation:drift 26s var(--ease-in-out) infinite alternate;
+}
+.aurora i:nth-child(1){inset-inline-start:-120px; inset-block-start:-180px}
+.aurora i:nth-child(2){inset-inline-start:34%; inset-block-start:-240px; animation-duration:32s; animation-delay:-8s;
+  background:radial-gradient(circle,rgba(255,153,77,.16),rgba(255,153,77,0) 64%)}
+.aurora i:nth-child(3){inset-inline-end:-160px; inset-block-start:60px; animation-duration:29s; animation-delay:-14s}
+.aurora i:nth-child(4){inset-inline-start:18%; inset-block-start:220px; width:420px; height:420px; animation-duration:36s;
+  background:radial-gradient(circle,rgba(126,224,138,.08),rgba(126,224,138,0) 64%)}
+@keyframes drift{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(60px,40px,0) scale(1.12)}
+  100%{transform:translate3d(-40px,80px,0) scale(.94)}
+}
+/* static film grain: kills gradient banding and adds texture */
+.aurora::after{
+  content:""; position:absolute; inset:0; opacity:.07; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{z-index:1}
+
+/* ---------- headline: word-by-word focus-in (once, on load) ---------- */
+.words .w{display:inline-block; opacity:0; filter:blur(8px); transform:translateY(14px);
+  animation:focus-in .8s var(--ease-out) forwards; animation-delay:calc(var(--i) * 70ms + 60ms)}
+@keyframes focus-in{to{opacity:1; filter:blur(0); transform:none}}
+.words .w:last-child{color:var(--gold)}
+
+/* ---------- ticker: real phrases you can say to Claude ---------- */
+.ticker{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 10px; margin:4px 0 0;
+  font-size:1.05rem; min-height:2.2em}
+.ticker-label{color:var(--muted)}
+.ticker-link{text-decoration:none; color:var(--ink); display:inline-flex; flex-wrap:wrap; gap:4px 10px; align-items:baseline}
+.ticker-say{font-weight:700; color:var(--gold)}
+.ticker-skill{color:var(--muted); font-size:.92rem}
+.ticker-link.swap-out{opacity:0; filter:blur(4px); transform:translateY(-8px);
+  transition:opacity 200ms var(--ease-out), filter 200ms var(--ease-out), transform 200ms var(--ease-out)}
+.ticker-link.swap-in{opacity:0; filter:blur(4px); transform:translateY(8px)}
+.ticker-link{transition:opacity 320ms var(--ease-out), filter 320ms var(--ease-out), transform 320ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){ .ticker-link:hover .ticker-skill{color:var(--gold)} }
+
+/* ---------- constellation: skill icons floating beside the hero ---------- */
+.constellation{display:none}
+@media (min-width:980px){
+  .constellation{display:block; position:absolute; inset-inline-end:10px; inset-block-start:70px;
+    width:280px; height:400px; pointer-events:none}
+}
+.star{position:absolute; inset-inline-start:var(--x); inset-block-start:var(--y);
+  font-size:calc(1.1rem + var(--depth) * 1.5rem); opacity:calc(.25 + var(--depth) * .6);
+  filter:blur(calc((1 - var(--depth)) * 1.6px))}
+.star > span{display:inline-block; animation:bob var(--bob) var(--ease-in-out) var(--delay) infinite alternate}
+@keyframes bob{from{transform:translateY(-6px) rotate(-4deg)} to{transform:translateY(6px) rotate(4deg)}}
+
+/* ---------- scroll reveal (hub cards, skill page sections) ---------- */
+.js .reveal{opacity:0; transform:translateY(16px);
+  transition:opacity 560ms var(--ease-out), transform 560ms var(--ease-out)}
+.js .reveal[data-visible]{opacity:1; transform:none}
+
+/* ---------- card spotlight follows the pointer ---------- */
+.skill-card{position:relative; overflow:hidden; isolation:isolate}
+.skill-card::before{content:""; position:absolute; inset:0; z-index:-1; opacity:0;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,0%),rgba(255,211,110,.13),transparent 65%);
+  transition:opacity 240ms ease}
+.skill-card .ic{display:inline-block; transform-origin:50% 80%; transition:transform 260ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .skill-card:hover::before{opacity:1}
+  .skill-card:hover .ic{transform:translateY(-3px) rotate(-8deg) scale(1.1)}
+}
+
+/* ---------- sliding filter pill (clip-path over an "active" copy) ---------- */
+.pill-copy{position:absolute; inset-block-start:0; inset-inline-start:0; pointer-events:none;
+  clip-path:inset(0 100% 100% 0 round 999px)}
+.pill-copy.ready{transition:clip-path 260ms var(--ease-in-out)}
+.pill-copy .chip{background:var(--gold); color:#1a1407; border-color:var(--gold)}
+.pill-copy .chip .n{color:#5a4a1a}
+@media (min-width:760px){ .pill-copy{width:100%} }
+.has-pill .chips-row:not(.pill-copy) .chip[aria-pressed="true"]{background:var(--card); color:var(--ink); border-color:var(--line)}
+.has-pill .chips-row:not(.pill-copy) .chip[aria-pressed="true"] .n{color:var(--muted)}
+
+/* ---------- skill page: breathing halo around the big icon ---------- */
+.skill-icon{position:relative; display:inline-block}
+.skill-icon::before{content:""; position:absolute; inset:-60%; z-index:-1; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,211,110,.28),rgba(255,211,110,0) 62%);
+  animation:breathe 7s var(--ease-in-out) infinite alternate}
+.skill-icon > span{display:inline-block; animation:bob 9s var(--ease-in-out) infinite alternate}
+@keyframes breathe{from{opacity:.55; transform:scale(.9)} to{opacity:1; transform:scale(1.08)}}
+.copybtn[data-done]{animation:pop 320ms var(--ease-out)}
+@keyframes pop{0%{transform:scale(.92)} 60%{transform:scale(1.05)} 100%{transform:scale(1)}}
+
+/* ---------- featured: hand-picked cards above the filter ---------- */
+.featured{max-width:none; margin-top:10px}
+.feat-grid{list-style:none; padding:0; margin:0; display:grid; gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.feat-card{padding:22px 22px 16px; gap:8px;
+  background:linear-gradient(160deg,#211c10 0%,var(--card) 55%); border-color:#4a3d18}
+/* gold gradient hairline drawn on a mask layer, so layout never changes */
+.feat-card::after{content:""; position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,211,110,.75),rgba(255,211,110,.08) 45%,rgba(255,153,77,.5));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude}
+.feat-top{display:flex; align-items:center; justify-content:space-between}
+.feat-card .ic{font-size:2.4rem}
+.feat-card .t{font-size:1.2rem}
+.badge.solid{background:var(--gold); color:#1a1407; border-color:var(--gold); font-weight:700}
+.say-line{margin-top:4px; padding:8px 12px; border-radius:10px; background:rgba(255,211,110,.07);
+  color:var(--muted); font-size:.9rem}
+.say-line b{color:var(--gold)}
+
+/* ---------- install everything in one line ---------- */
+.install-all{max-width:none; margin-top:26px}
+.all-card{padding:20px 22px; background:linear-gradient(160deg,#16201a 0%,var(--card) 60%); border-color:#2f4a36}
+.all-card h2{margin:0 0 8px; font-size:1.2rem}
+.all-card .promptbox{background:var(--card-2); border-radius:12px; padding:4px 14px 12px; margin-top:12px}
+.all-card details.alt .promptbox{margin-top:0}
+
+/* ---------- reduced motion: keep fades, drop movement ---------- */
+@media (prefers-reduced-motion:reduce){
+  .aurora i,.star > span,.skill-icon > span,.skill-icon::before,.copybtn[data-done]{animation:none}
+  .words .w{animation:fade .3s ease forwards; filter:none; transform:none}
+  .js .reveal{transform:none}
+  .ticker-link.swap-out,.ticker-link.swap-in{transform:none; filter:none}
+}
+@keyframes fade{to{opacity:1}}
+@media (prefers-reduced-transparency:reduce){ .aurora{display:none} }
+
+/* ---------- course band: the Claude Code video course ---------- */
+.course{max-width:none; margin-top:34px}
+.course-card{position:relative; display:grid; overflow:hidden; text-decoration:none; color:var(--ink);
+  border:1px solid #3d3360; border-radius:calc(var(--radius) + 4px);
+  background:linear-gradient(160deg,#1d1830 0%,var(--card) 60%);
+  transition:transform 160ms var(--ease-out), border-color 160ms var(--ease-out)}
+.course-img{display:block; width:100%; height:auto; aspect-ratio:1200/630; max-width:100%}
+.course-body{display:grid; gap:10px; padding:20px 22px 22px; min-width:0}
+.course-body .eyebrow{margin:0}
+.course-t{font-size:clamp(1.3rem,3.2vw,1.65rem); font-weight:750; line-height:1.2; letter-spacing:-.01em; text-wrap:balance}
+.course-d{color:var(--muted); max-width:58ch}
+.course-facts{list-style:none; padding:0; margin:2px 0 0; display:flex; flex-wrap:wrap; gap:8px}
+.course-facts li{padding:4px 12px; border-radius:999px; background:rgba(217,203,240,.14);
+  border:1px solid #3d3360; font-size:.9rem}
+.course-cta{display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-top:6px}
+.course-btn{background:var(--coral); color:#241109; font-weight:700; border-radius:12px; padding:10px 18px}
+.course-card:active{transform:scale(.99)}
+.course-pic{display:block; min-width:0}
+@media (min-width:860px){
+  .course-card{grid-template-columns:1fr 300px; align-items:center}
+  .course-pic{order:2; align-self:stretch; display:grid; place-items:center; padding-block:22px; padding-inline:0 26px;
+    background:radial-gradient(circle at 50% 45%,rgba(160,130,255,.22),rgba(160,130,255,0) 70%)}
+  .course-img{aspect-ratio:2/3; border-radius:12px; box-shadow:0 24px 50px -20px rgba(0,0,0,.7)}
+  .course-body{padding:30px 32px}
+}
+@media (hover:hover) and (pointer:fine){ .course-card:hover{border-color:#7b66c9} }
+@media (prefers-contrast:more){ .course-card,.course-facts li{border-color:#5a6473} .course-d{color:#c6ccd6} }
+
+/* ---------- guide pages (guides/<name>/) ---------- */
+.guides{display:grid; gap:10px}
+.tiles{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:0 0 14px}
+.tile{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px}
+.tile b{display:block; color:var(--gold); font-size:1.6rem; line-height:1.15; letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums; margin-bottom:6px}
+.tile span{color:var(--muted); font-size:.93rem}
+.flow{list-style:none; padding:0; margin:0 0 16px; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; counter-reset:none}
+.flow li{position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px 16px 14px; display:flex; flex-direction:column; gap:4px}
+.flow li:not(:last-child)::after{content:"←"; position:absolute; inset-inline-end:-12px; top:50%;
+  transform:translate(50%,-50%); color:var(--gold); font-size:1.1rem; z-index:1}
+.flow .n{display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%;
+  background:#2a2414; color:var(--gold); font-weight:700; font-size:.85rem; margin-bottom:4px}
+.flow b{font-size:1rem}
+.flow span:last-child{color:var(--muted); font-size:.9rem}
+.layers{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.layers .card{margin:0}
+.layers p{color:#c9cfd9; font-size:.95rem; margin:0}
+ol.steps{list-style:none; counter-reset:step; padding:0; margin:0}
+ol.steps li{counter-increment:step; position:relative; padding-inline-start:44px; margin:0 0 14px; min-height:30px}
+ol.steps li::before{content:counter(step); position:absolute; inset-inline-start:0; top:0;
+  width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+  background:var(--gold); color:#1a1407; font-weight:700; font-size:.9rem}
+.rule-points{margin-bottom:14px}
+details.faq{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:4px 18px; margin:0 0 10px}
+details.faq summary{cursor:pointer; padding:12px 0; font-weight:600; list-style-position:inside}
+details.faq p{color:#c9cfd9; margin:0 0 14px}
+details.faq[open] summary{color:var(--gold)}
+@media (max-width:860px){
+  .flow{grid-template-columns:1fr 1fr}
+  .flow li:nth-child(2)::after{display:none}
+}
+@media (max-width:700px){
+  .tiles,.layers{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  .flow li:not(:last-child)::after{content:"↓"; inset-inline:0; top:auto; bottom:-12px; text-align:center;
+    transform:translateY(50%)}
+  .flow li:nth-child(2)::after{display:block}
+}
+@media (prefers-contrast:more){ .tile,.flow li,details.faq{border-color:#5a6473} .tile span,.flow span:last-child{color:#c6ccd6} }
+
+
+/* ---------- AI Transformation: hero grid, photo, magnets ---------- */
+.hero-grid{display:grid; gap:26px}
+.hero-visual{position:relative; display:none}
+.hero-face{width:100%; aspect-ratio:1; object-fit:cover; border-radius:28px;
+  border:2px solid var(--coral); box-shadow:0 18px 50px rgba(238,154,112,.22)}
+.float-chip{position:absolute; background:var(--card-2); border:1px solid var(--line);
+  color:var(--ink); font-weight:600; font-size:.85rem; padding:7px 14px; border-radius:999px;
+  animation:chipfloat 5s var(--ease-in-out) infinite alternate}
+.fc1{top:8%; inset-inline-start:-14px}
+.fc2{top:46%; inset-inline-end:-10px; animation-delay:1.2s}
+.fc3{bottom:6%; inset-inline-start:8%; animation-delay:2.4s}
+@keyframes chipfloat{from{transform:translateY(-6px)}to{transform:translateY(8px)}}
+@media (min-width:820px){
+  .hero{max-width:none}
+  .hero-grid{grid-template-columns:1.5fr 1fr; align-items:center}
+  .hero-visual{display:block}
+}
+@media (prefers-reduced-motion:reduce){
+  .float-chip{animation:none}
+}
+
+/* magnets */
+.magnets{margin-top:56px}
+.mag-grid{display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.magnet{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; font-weight:600; font-size:.95rem;
+  transition:transform 160ms var(--ease-out), border-color 160ms var(--ease-out)}
+.magnet:hover{border-color:var(--coral)}
+.magnet:active{transform:scale(.985)}
+.magnet .dot{width:10px; height:10px; border-radius:50%; flex:none; background:var(--coral)}
+.mag-grid .magnet:nth-child(4n+1) .dot{background:var(--sky)}
+.mag-grid .magnet:nth-child(4n+2) .dot{background:var(--coral)}
+.mag-grid .magnet:nth-child(4n+3) .dot{background:var(--mint)}
+.mag-grid .magnet:nth-child(4n+4) .dot{background:var(--lilac)}
+
+/* hero photo replaces the constellation collage */
+.constellation{display:none}

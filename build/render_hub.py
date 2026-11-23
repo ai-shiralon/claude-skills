@@ -1,0 +1,280 @@
+"""Render the hub page (index.html) from internal content + catalog.json."""
+import json
+import random
+
+from common import (BASE_URL, CATALOG, CATEGORIES, ROOT, aurora_html, category_of, esc,
+                    footer_html, load_internal, load_json, page_shell, write_text)
+
+HUB_TITLE = "כל הסקילים של שיר אלון | AI Transformation"
+HUB_DESC = ("מרכז אחד לסקילים נבחרים ל-Claude Code מבית שיר אלון ו-AI Transformation - "
+            "יצירת תוכן בעברית, פרסום ושיווק, ניהול עסק לעצמאים ווידאו. "
+            "כל סקיל עם דף הסבר והתקנה בהדבקה אחת.")
+# Kept as units: splitting "ל-Claude Code" into inline-blocks breaks bidi order.
+TITLE_WORDS = ["כל", "הסקילים", "שלי,", "במקום", "אחד."]
+SCRIPTS = ["assets/motion.js", "assets/hero.js", "assets/filter.js"]
+TICKER_SEED = 7          # fixed seeds keep the generated HTML byte-stable
+CONSTELLATION_SEED = 11
+CONSTELLATION_SIZE = 14
+TICKER_MAX_CHARS = 44    # longer phrases wrap to 3 lines and make the hero jump
+# Phrases for the external cards, which have no content/*.json of their own.
+EXTERNAL_SAY = {
+    "meeting-notes-he": "תסכם לי את הפגישה הזו",
+    "hebrew-documents-guide": "תכתוב לי מסמך בעברית תקינה",
+    "quote-check-guide": "תבדוק לי את הצעת המחיר",
+    "claude-video-skills": "תעשה לי סרטון מטורף על",
+}
+
+
+def skill_count(item):
+    """How many installable skills a card stands for (bundles count more)."""
+    return int(item.get("count", 1))
+
+
+def card_html(item, external):
+    search = " ".join([item.get("title", ""), item.get("tagline", ""),
+                       item.get("name", item.get("repo", "")), " ".join(item.get("say", []))])
+    badge = f'<span class="badge">{esc(item["badge"])}</span>' if item.get("badge") else ""
+    ext = '<span class="badge ext">דף נפרד ↗</span>' if external else ""
+    return f"""<li class="cardwrap reveal" data-cat="{category_of(item)}" data-search="{esc(search.lower())}">
+  <a class="skill-card" href="{esc(item['url'])}">
+    <span class="ic" aria-hidden="true">{esc(item.get('icon', '🧩'))}</span>
+    <span class="t">{esc(item.get('title'))}</span>
+    <span class="d">{esc(item.get('tagline'))}</span>
+    <span class="meta">{badge}{ext}<span class="go" aria-hidden="true">←</span></span>
+  </a>
+</li>"""
+
+
+def group(items):
+    buckets = {key: [] for key in CATEGORIES}
+    for item, external in items:
+        buckets[category_of(item)].append((item, external))
+    return {k: v for k, v in buckets.items() if v}
+
+
+def chip_list(buckets, tag):
+    """One row of chips. tag='a' is the real row; tag='span' is the pill copy."""
+    first = {"a": ' href="#top" data-filter="all" aria-pressed="true"', "span": ""}[tag]
+    chips = [f'<{tag} class="chip"{first}>הכול</{tag}>']
+    for key, entries in buckets.items():
+        icon, label = CATEGORIES[key]
+        attrs = (f' href="#cat-{key}" data-filter="{key}" aria-pressed="false"' if tag == "a" else "")
+        chips.append(f'<{tag} class="chip"{attrs}>{icon} {esc(label)} '
+                     f'<span class="n">{len(entries)}</span></{tag}>')
+    return "\n".join(chips)
+
+
+def sections_html(buckets):
+    out = []
+    for key, entries in buckets.items():
+        icon, label = CATEGORIES[key]
+        cards = "\n".join(card_html(item, ext) for item, ext in entries)
+        out.append(f"""<section class="cat" id="cat-{key}" data-cat="{key}">
+<h2 class="reveal"><span aria-hidden="true">{icon}</span> {esc(label)}</h2>
+<ul class="grid">
+{cards}
+</ul></section>""")
+    return "\n".join(out)
+
+
+def say_for(item, external):
+    """The first short trigger phrase for a card, or None."""
+    options = [EXTERNAL_SAY.get(item.get("repo"))] if external else item.get("say", [])
+    options = [s.strip("\"'") for s in options if s and len(s) <= TICKER_MAX_CHARS]
+    return options[0] if options else None
+
+
+def ticker_phrases(items):
+    phrases = []
+    for item, external in items:
+        say = say_for(item, external)
+        if say:
+            phrases.append({"say": say, "title": item["title"], "url": item["url"]})
+    random.Random(TICKER_SEED).shuffle(phrases)
+    return phrases
+
+
+def ticker_html(phrases):
+    first = phrases[0]
+    data = esc(json.dumps(phrases, ensure_ascii=False))
+    return f"""<p class="ticker rise" data-phrases="{data}">
+  <span class="ticker-label">תגיד לקלוד:</span>
+  <a class="ticker-link" href="{esc(first['url'])}"><span class="ticker-say">"{esc(first['say'])}"</span>
+  <span class="ticker-skill">← {esc(first['title'])}</span></a></p>"""
+
+
+def constellation_html(items):
+    """Skill icons scattered at fixed pseudo-random spots with a depth each."""
+    rng = random.Random(CONSTELLATION_SEED)
+    icons = [item.get("icon", "🧩") for item, _ in items][:CONSTELLATION_SIZE]
+    stars = []
+    for i, icon in enumerate(icons):
+        depth = round(rng.uniform(0.35, 1.0), 2)
+        x, y = rng.uniform(4, 86), rng.uniform(4, 88)
+        bob = round(rng.uniform(7, 11), 1)
+        stars.append(f'<span class="star" data-depth="{depth}" style="--x:{x:.1f}%;--y:{y:.1f}%;'
+                     f'--depth:{depth};--bob:{bob}s;--delay:-{i * 0.7:.1f}s">'
+                     f'<span>{esc(icon)}</span></span>')
+    return f'<div class="constellation" aria-hidden="true">{"".join(stars)}</div>'
+
+
+def feat_card_html(item, external):
+    say = say_for(item, external)
+    say_line = f'<span class="say-line">תגיד לקלוד: <b>"{esc(say)}"</b></span>' if say else ""
+    return f"""<li class="featwrap reveal">
+  <a class="skill-card feat-card" href="{esc(item['url'])}">
+    <span class="feat-top"><span class="ic" aria-hidden="true">{esc(item.get('icon', '🧩'))}</span>
+      <span class="badge solid">מומלץ</span></span>
+    <span class="t">{esc(item.get('title'))}</span>
+    <span class="d">{esc(item.get('tagline'))}</span>
+    {say_line}
+    <span class="meta"><span class="go" aria-hidden="true">←</span></span>
+  </a>
+</li>"""
+
+
+def featured_html(items, keys):
+    """Hand-picked cards shown above the filter; they stay in their category too."""
+    if not keys:
+        return ""
+    by_key = {item.get("repo") or item.get("name"): (item, ext) for item, ext in items}
+    missing = [k for k in keys if k not in by_key]
+    if missing:
+        raise SystemExit(f"catalog.json 'featured' names unknown skills: {missing}")
+    cards = "\n".join(feat_card_html(*by_key[k]) for k in keys)
+    return f"""<section class="featured" aria-labelledby="feat-h">
+<h2 id="feat-h" class="reveal"><span aria-hidden="true">⭐</span> מומלצים להתחלה</h2>
+<ul class="feat-grid">
+{cards}
+</ul></section>"""
+
+
+def install_all_html(total):
+    """One copy-paste line that installs every skill on the page."""
+    cmd = f"curl -fsSL {BASE_URL}/install.sh | bash -s -- all"
+    prompt = (f"התקן לי את כל הסקילים של של שיר אלון: הרץ ב-Bash את הפקודה {cmd} "
+              "ואז תסכם לי בקצרה מה הותקן ומה כל סקיל עושה.")
+    return f"""<section class="install-all reveal" aria-labelledby="all-h">
+<div class="card all-card">
+  <h2 id="all-h"><span aria-hidden="true">📦</span> רוצה את כולם? התקנה בשורה אחת</h2>
+  <p class="muted">מדביקים את השורה הזו ב-Claude Code, והוא מתקין את כל {total} הסקילים.
+     סקיל שכבר מותקן אצלך לא יידרס.</p>
+  <div class="promptbox"><button class="copybtn" type="button" data-copy="all-prompt">העתק</button>
+<pre id="all-prompt">{esc(prompt)}</pre></div>
+  <details class="alt"><summary>מעדיף טרמינל? (Git Bash / Mac / Linux)</summary>
+  <div class="promptbox"><button class="copybtn" type="button" data-copy="all-cmd">העתק</button>
+<pre id="all-cmd" class="ltr">{esc(cmd)}</pre></div></details>
+  <p class="tag">חלק מהסקילים צריכים תוכנה נוספת (למשל Python). בפעם הראשונה שתשתמש בסקיל כזה,
+     קלוד יגיד לך בדיוק מה להתקין.</p>
+</div></section>"""
+
+def course_html(course):
+    """Band that points to Shir's Claude course; empty when catalog has none."""
+    if not course:
+        return ""
+    facts = "".join(f"<li>{esc(f)}</li>" for f in course["facts"])
+    pic = ""
+    if course.get("image"):
+        pic = f"""<picture class="course-pic">
+    <img class="course-img" src="{esc(course['image'])}" loading="lazy" alt="{esc(course['alt'])}">
+  </picture>"""
+    return f"""<section class="course reveal" aria-labelledby="course-h">
+<a class="course-card" href="{esc(course['url'])}" target="_blank" rel="noopener">
+  {pic}
+  <span class="course-body">
+    <span class="eyebrow">🎓 {esc(course['eyebrow'])}</span>
+    <span class="course-t" id="course-h">{esc(course['title'])}</span>
+    <span class="course-d">{esc(course['text'])}</span>
+    <ul class="course-facts">{facts}</ul>
+    <span class="course-cta"><span class="course-btn">{esc(course['cta'])} ←</span>
+      <span class="muted">{esc(course['price'])}</span></span>
+  </span>
+</a></section>"""
+
+
+def guide_link(guide, href):
+    return f"""<a class="guide rise" href="{esc(href)}">
+    <span class="ic" aria-hidden="true">{esc(guide['icon'])}</span>
+    <span><b>{esc(guide['title'])}</b><br><span class="d">{esc(guide['tagline'])}</span></span>
+    <span class="go" aria-hidden="true">←</span></a>"""
+
+
+def guides_html(guide, extra):
+    links = [guide_link(guide, guide["url"])]
+    links += [guide_link(g, f"guides/{g['name']}/") for g in extra]
+    return '<div class="guides">' + "\n".join(links) + "</div>"
+
+
+def hero_html(total, pages, guide, phrases, extra=()):
+    words = "".join(f'<span class="w" style="--i:{i}">{esc(w)}</span> '
+                    for i, w in enumerate(TITLE_WORDS))
+    return f"""<header class="hero" id="top">
+  <div class="hero-grid">
+  <div class="hero-text">
+  <p class="eyebrow rise">✨ שיר אלון · AI Transformation</p>
+  <h1 class="words">{words.strip()}</h1>
+  <p class="sub rise">סקילים נבחרים בעברית פשוטה: יצירת תוכן, פרסום ושיווק, ניהול עסק
+     לעצמאים ווידאו. כל סקיל עם דף הסבר והתקנה בהדבקה אחת.</p>
+  {ticker_html(phrases)}
+  <div class="stats rise"><span><b data-count="{total}">{total}</b> סקילים</span>
+    <span><b data-count="{pages}">{pages}</b> דפי הסבר</span><span><b>1</b> הדבקה להתקנה</span></div>
+  {guides_html(guide, extra)}
+  </div>
+  <div class="hero-visual rise" aria-hidden="true">
+    <img class="hero-face" src="assets/shir-face.png" alt="">
+    <span class="float-chip fc1">✍️ תוכן בעברית</span>
+    <span class="float-chip fc2">🎬 וידאו</span>
+    <span class="float-chip fc3">💼 עסק בקלות</span>
+  </div>
+  </div>
+</header>"""
+
+
+def filterbar_html(buckets):
+    return f"""<div class="filterbar">
+  <input class="search" type="search" placeholder="חיפוש סקיל... (למשל: וורד, בוט, יוטיוב)"
+         aria-label="חיפוש סקיל" hidden>
+  <nav class="chips" aria-label="סינון לפי תחום">
+    <div class="chips-row">
+{chip_list(buckets, "a")}
+    </div>
+    <div class="chips-row pill-copy" aria-hidden="true" hidden>
+{chip_list(buckets, "span")}
+    </div>
+  </nav>
+</div>
+<p class="empty" hidden>לא נמצא סקיל מתאים. נסה מילה אחרת, או <a href="#top" data-filter="all">הצג הכול</a>.</p>"""
+
+
+def magnets_html(magnets):
+    if not magnets:
+        return ""
+    links = "\n".join(
+        f'<a class="magnet" href="{esc(m["url"])}" target="_blank" rel="noopener">'
+        f'<span class="dot" aria-hidden="true"></span>{esc(m["title"])}</a>'
+        for m in magnets)
+    return f"""<section class="magnets reveal" aria-labelledby="mag-h">
+<h2 id="mag-h"><span aria-hidden="true">🎁</span> מתנות חינם להתחיל איתן</h2>
+<p class="muted">מדריכים וסקילים חינמיים מבית AI Transformation - להורדה בלחיצה.</p>
+<div class="mag-grid">
+{links}
+</div></section>"""
+
+
+def render():
+    catalog = load_json(CATALOG)
+    items = [(p, False) for p in load_internal()]
+    items += [(e, True) for e in catalog.get("external", [])]
+    items.sort(key=lambda pair: pair[0].get("title", ""))
+    buckets = group(items)
+    total = sum(skill_count(item) for item, _ in items)
+    body = "\n".join([aurora_html(), '<div class="wrap">', constellation_html(items),
+                      hero_html(total, len(items), catalog["guide"], ticker_phrases(items), catalog.get("guides", [])),
+                      course_html(catalog.get("course")),
+                      featured_html(items, catalog.get("featured", [])),
+                      install_all_html(total),
+                      filterbar_html(buckets), '<main id="skills">', sections_html(buckets),
+                      "</main>", magnets_html(catalog.get("magnets", [])), footer_html(), "</div>"])
+    html = page_shell(HUB_TITLE, HUB_DESC, "🧰", "assets/site.css", body, SCRIPTS, page_path="", og_name="hub")
+    write_text(ROOT / "index.html", html)
+    return len(items), total
