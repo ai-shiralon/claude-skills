@@ -1,94 +1,102 @@
 {
-  "_note": "External skill pages and link-outs. Hand-edited fields preserved.",
-  "featured": [
-    "meeting-notes-he",
-    "pdf",
-    "copywriting",
-    "poster-motion"
+ "_note": "External skill pages and link-outs. Hand-edited fields preserved.",
+ "featured": [
+  "meeting-notes-he",
+  "pdf",
+  "copywriting",
+  "poster-motion"
+ ],
+ "guide": {
+  "icon": "💬",
+  "title": "הקהילה של שיר אלון בוואטסאפ",
+  "tagline": "סקילים חדשים, מדריכים וטיפים מעשיים - קודם כל שם.",
+  "url": "https://chat.whatsapp.com/LrggBbcGThK7kZCvvtDs1G"
+ },
+ "course": {
+  "eyebrow": "הקורס של שיר אלון",
+  "title": "קורס קלוד לכולם",
+  "text": "6 פרקים מעשיים בעברית פשוטה: מההתקנה ועד סוכנים שעובדים בשבילכם. תשלום חד-פעמי, עדכונים בחינם.",
+  "facts": [
+   "6 פרקים מעשיים",
+   "עברית פשוטה",
+   "תשלום אחד - עדכונים בחינם"
   ],
-  "guide": {
-    "icon": "💬",
-    "title": "הקהילה של שיר אלון בוואטסאפ",
-    "tagline": "סקילים חדשים, מדריכים וטיפים מעשיים - קודם כל שם.",
-    "url": "https://chat.whatsapp.com/LrggBbcGThK7kZCvvtDs1G"
+  "cta": "לפרטים והרשמה",
+  "price": "68 שקלים",
+  "url": "https://shiralon.gumroad.com/l/gxgrlp",
+  "alt": "קורס קלוד לכולם של שיר אלון",
+  "image": "assets/shir-course.jpg"
+ },
+ "external": [
+  {
+   "repo": "meeting-notes-he",
+   "icon": "📝",
+   "title": "סיכום פגישה ומייל המשך",
+   "tagline": "הסקיל של שיר: הופך הקלטת פגישה לסיכום מסודר ומייל המשך מוכן לשליחה. חינם בגמרוד.",
+   "category": "content",
+   "badge": "חינם · של שיר",
+   "url": "https://shiralon.gumroad.com/l/meeting-notes-he"
   },
-  "course": {
-    "eyebrow": "הקורס של שיר אלון",
-    "title": "קורס קלוד לכולם",
-    "text": "6 פרקים מעשיים בעברית פשוטה: מההתקנה ועד סוכנים שעובדים בשבילכם. תשלום חד-פעמי, עדכונים בחינם.",
-    "facts": [
-      "6 פרקים מעשיים",
-      "עברית פשוטה",
-      "תשלום אחד - עדכונים בחינם"
-    ],
-    "cta": "לפרטים והרשמה",
-    "price": "68 שקלים",
-    "url": "https://shiralon.gumroad.com/l/gxgrlp",
-    "alt": "קורס קלוד לכולם של שיר אלון"
+  {
+   "repo": "hebrew-documents-guide",
+   "icon": "📄",
+   "title": "מסמכים מקצועיים בעברית תקינה",
+   "tagline": "המדריך של שיר, כולל הסקיל: מסמכים עבריים מימין לשמאל, בלי שיבושים. חינם בגמרוד.",
+   "category": "content",
+   "badge": "חינם · של שיר",
+   "url": "https://shiralon.gumroad.com/l/hebrew-documents-guide"
   },
-  "external": [
-    {
-      "repo": "meeting-notes-he",
-      "icon": "📝",
-      "title": "סיכום פגישה ומייל המשך",
-      "tagline": "הסקיל של שיר: הופך הקלטת פגישה לסיכום מסודר ומייל המשך מוכן לשליחה. חינם בגמרוד.",
-      "category": "content",
-      "badge": "חינם · של שיר",
-      "url": "https://shiralon.gumroad.com/l/meeting-notes-he"
-    },
-    {
-      "repo": "hebrew-documents-guide",
-      "icon": "📄",
-      "title": "מסמכים מקצועיים בעברית תקינה",
-      "tagline": "המדריך של שיר, כולל הסקיל: מסמכים עבריים מימין לשמאל, בלי שיבושים. חינם בגמרוד.",
-      "category": "content",
-      "badge": "חינם · של שיר",
-      "url": "https://shiralon.gumroad.com/l/hebrew-documents-guide"
-    },
-    {
-      "repo": "quote-check-guide",
-      "icon": "💰",
-      "title": "הצעת מחיר שבודקים לפני שליחה",
-      "tagline": "המדריך של שיר: בודקים הצעת מחיר עם קלוד לפני שהיא יוצאת ללקוח. חינם בגמרוד.",
-      "category": "business",
-      "badge": "חינם · של שיר",
-      "url": "https://shiralon.gumroad.com/l/quote-check-guide"
-    },
-    {
-      "repo": "claude-video-skills",
-      "icon": "🎬",
-      "title": "סטודיו וידאו של הקהילה",
-      "tagline": "27 סקילים ליצירה ועריכה של סרטונים, בחבילה נפרדת של קהילת בין קודש לקלוד.",
-      "category": "video",
-      "badge": "חבילה של 27 סקילים",
-      "url": "https://hiyabh.github.io/claude-video-skills/"
-    }
-  ],
-  "magnets": [
-    {
-      "title": "סיכום פגישה ומייל המשך - סקיל חינמי",
-      "url": "https://shiralon.gumroad.com/l/meeting-notes-he"
-    },
-    {
-      "title": "מסמכים מקצועיים בעברית תקינה",
-      "url": "https://shiralon.gumroad.com/l/hebrew-documents-guide"
-    },
-    {
-      "title": "קריאת מסמכים עם קלוד - המדריך המלא",
-      "url": "https://shiralon.gumroad.com/l/claude-documents-guide"
-    },
-    {
-      "title": "תמונות תדמית עם ChatGPT - מדריך טעימה",
-      "url": "https://shiralon.gumroad.com/l/profile-photos-free-guide"
-    },
-    {
-      "title": "הצעת מחיר שבודקים לפני שליחה",
-      "url": "https://shiralon.gumroad.com/l/quote-check-guide"
-    },
-    {
-      "title": "איך לכתוב פוסטים טובים יותר",
-      "url": "https://shiralon.gumroad.com/l/lesson01-better-posts"
-    }
-  ],
-  "guides": []
+  {
+   "repo": "quote-check-guide",
+   "icon": "💰",
+   "title": "הצעת מחיר שבודקים לפני שליחה",
+   "tagline": "המדריך של שיר: בודקים הצעת מחיר עם קלוד לפני שהיא יוצאת ללקוח. חינם בגמרוד.",
+   "category": "business",
+   "badge": "חינם · של שיר",
+   "url": "https://shiralon.gumroad.com/l/quote-check-guide"
+  },
+  {
+   "repo": "claude-video-skills",
+   "icon": "🎬",
+   "title": "סטודיו וידאו של הקהילה",
+   "tagline": "27 סקילים ליצירה ועריכה של סרטונים, בחבילה נפרדת של קהילת בין קודש לקלוד.",
+   "category": "video",
+   "badge": "חבילה של 27 סקילים",
+   "url": "https://hiyabh.github.io/claude-video-skills/"
+  }
+ ],
+ "magnets": [
+  {
+   "title": "סיכום פגישה ומייל המשך - סקיל חינמי",
+   "url": "https://shiralon.gumroad.com/l/meeting-notes-he",
+   "image": "assets/magnets/meeting-notes-he.jpg"
+  },
+  {
+   "title": "קריאת מסמכים עם קלוד - המדריך המלא",
+   "url": "https://shiralon.gumroad.com/l/claude-documents-guide"
+  },
+  {
+   "title": "תמונות תדמית עם ChatGPT - מדריך טעימה",
+   "url": "https://shiralon.gumroad.com/l/profile-photos-free-guide",
+   "image": "assets/magnets/profile-photos-free-guide.jpg"
+  },
+  {
+   "title": "הצעת מחיר שבודקים לפני שליחה",
+   "url": "https://shiralon.gumroad.com/l/quote-check-guide",
+   "image": "assets/magnets/quote-check-guide.jpg"
+  },
+  {
+   "title": "איך לכתוב פוסטים טובים יותר",
+   "url": "https://shiralon.gumroad.com/l/lesson01-better-posts",
+   "image": "assets/magnets/lesson01-better-posts.jpg"
+  }
+ ],
+ "guides": [],
+ "paid": [
+  {
+   "title": "המדריך למסמכים מקצועיים בעברית תקינה - כולל הסקיל",
+   "url": "https://shiralon.gumroad.com/l/hebrew-documents-guide",
+   "image": "assets/magnets/hebrew-documents-guide.jpg"
+  }
+ ]
 }

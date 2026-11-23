@@ -222,9 +222,6 @@ def hero_html(total, pages, guide, phrases, extra=()):
   </div>
   <div class="hero-visual rise" aria-hidden="true">
     <img class="hero-face" src="assets/shir-face.png" alt="">
-    <span class="float-chip fc1">✍️ תוכן בעברית</span>
-    <span class="float-chip fc2">🎬 וידאו</span>
-    <span class="float-chip fc3">💼 עסק בקלות</span>
   </div>
   </div>
 </header>"""
@@ -246,19 +243,39 @@ def filterbar_html(buckets):
 <p class="empty" hidden>לא נמצא סקיל מתאים. נסה מילה אחרת, או <a href="#top" data-filter="all">הצג הכול</a>.</p>"""
 
 
-def magnets_html(magnets):
-    if not magnets:
+def magnets_html(magnets, paid=()):
+    if not magnets and not paid:
         return ""
-    links = "\n".join(
-        f'<a class="magnet" href="{esc(m["url"])}" target="_blank" rel="noopener">'
-        f'<span class="dot" aria-hidden="true"></span>{esc(m["title"])}</a>'
-        for m in magnets)
+    def card(m):
+        img = m.get("image")
+        if img:
+            art = f'<img class="mag-img" src="{esc(img)}" loading="lazy" alt="">'
+        else:
+            art = (f'<span class="mag-img mag-fallback" aria-hidden="true">'
+                   f'<span class="dot"></span>📄</span>')
+        return (f'<a class="magnet" href="{esc(m["url"])}" target="_blank" rel="noopener">'
+                f'{art}<span class="mag-t">{esc(m["title"])}</span></a>')
+    links = "\n".join(card(m) for m in magnets)
+    paid_row = ""
+    if paid:
+        def paid_card(m):
+            badge = f' <span class="price">{esc(m["price"])}</span>' if m.get("price") else ""
+            return (f'<a class="magnet paid" href="{esc(m["url"])}" target="_blank" rel="noopener">'
+                    f'<img class="mag-img" src="{esc(m["image"])}" loading="lazy" alt="">'
+                    f'<span class="mag-t">{esc(m["title"])}{badge}</span></a>')
+        cards = "\n".join(paid_card(m) for m in paid)
+        paid_row = f"""<h3 class="mag-sub">עוד מדריך, בתשלום סמלי</h3>
+<div class="mag-grid">
+{cards}
+</div>"""
     return f"""<section class="magnets reveal" aria-labelledby="mag-h">
 <h2 id="mag-h"><span aria-hidden="true">🎁</span> מתנות חינם להתחיל איתן</h2>
 <p class="muted">מדריכים וסקילים חינמיים מבית AI Transformation - להורדה בלחיצה.</p>
 <div class="mag-grid">
 {links}
-</div></section>"""
+</div>
+{paid_row}
+</section>"""
 
 
 def render():
@@ -274,7 +291,7 @@ def render():
                       featured_html(items, catalog.get("featured", [])),
                       install_all_html(total),
                       filterbar_html(buckets), '<main id="skills">', sections_html(buckets),
-                      "</main>", magnets_html(catalog.get("magnets", [])), footer_html(), "</div>"])
+                      "</main>", magnets_html(catalog.get("magnets", []), catalog.get("paid", [])), footer_html(), "</div>"])
     html = page_shell(HUB_TITLE, HUB_DESC, "🧰", "assets/site.css", body, SCRIPTS, page_path="", og_name="hub")
     write_text(ROOT / "index.html", html)
     return len(items), total
