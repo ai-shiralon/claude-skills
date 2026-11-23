@@ -28,5 +28,10 @@
   "example": {
     "in": "יש לי קורס קלוד, איזה מגנט יביא נרשמים איכותיים",
     "out": "שלוש הצעות מגנט מדורגות, עם ההמלצה, מבנה התוכן של כל אחת, והמסלול מהורדה לרכישת הקורס"
+  },
+  "credit": {
+    "source": "coreyhaines31/marketingskills",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "license": "MIT"
   }
 }

@@ -28,5 +28,10 @@
   "example": {
     "in": "תכין מצגת של 8 שקופיות על שירותי ה-AI שלי לפגישת לקוחות",
     "out": "קובץ pptx עם שקופית פתיחה, בעיה, פתרון, הוכחות, מחירון וסיומת עם פרטי קשר"
+  },
+  "credit": {
+    "source": "anthropics/skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache 2.0"
   }
 }

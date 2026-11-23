@@ -95,14 +95,22 @@ def install_html(page):
 </details></section>"""
 
 
+def credit_html(page):
+    c = page.get("credit")
+    if not c:
+        return ""
+    return (f'<p class="credit muted">מקור: <a href="{esc(c["url"])}" target="_blank" rel="noopener">'
+            f'{esc(c["source"])}</a> · רישיון {esc(c["license"])}</p>')
+
+
 def render(page):
     body = "\n".join([
         aurora_html(dim=True), '<div class="wrap">', header_html(page), what_html(page), say_html(page),
         example_html(page), requires_html(page), install_html(page),
-        '<nav class="back"><a class="btn ghost" href="../../">→ לכל הסקילים</a></nav>',
+        credit_html(page), '<nav class="back"><a class="btn ghost" href="../../">→ לכל הסקילים</a></nav>',
         footer_html(), "</div>",
     ])
-    title = f"{page['title']} - סקיל ל-Claude Code · בין קודש לקלוד"
+    title = f"{page['title']} - סקיל ל-Claude Code · AI Transformation"
     html = page_shell(title, page["tagline"], page["icon"], CSS_HREF, body, SCRIPTS,
                       page_path=f"skills/{page['name']}/", og_name=page["name"])
     write_text(PAGES_DIR / page["name"] / "index.html", html)

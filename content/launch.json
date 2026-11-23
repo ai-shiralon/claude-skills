@@ -28,5 +28,10 @@
   "example": {
     "in": "אני משיקה קורס דיגיטלי בעוד 3 שבועות, תבנה לי תוכנית",
     "out": "לוח זמנים שבועי: תוכן מקדים, רשימת המתנה, יום השקה בערוצים הנכונים, ותוכן המשך לשבוע שאחרי"
+  },
+  "credit": {
+    "source": "coreyhaines31/marketingskills",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "license": "MIT"
   }
 }

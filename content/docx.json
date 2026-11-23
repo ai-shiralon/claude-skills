@@ -28,5 +28,10 @@
   "example": {
     "in": "תהפוך את הטקסט הזה לדו״ח Word עם תוכן עניינים וכותרות",
     "out": "קובץ docx מוכן עם עמוד שער, תוכן עניינים אוטומטי, כותרות ממוספרות ועיצוב אחיד"
+  },
+  "credit": {
+    "source": "anthropics/skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache 2.0"
   }
 }

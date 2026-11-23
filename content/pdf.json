@@ -28,5 +28,10 @@
   "example": {
     "in": "תחלץ את כל הטבלאות מדו״ח הכנסות.pdf לטבלה אחת",
     "out": "קובץ אקסל או CSV עם כל הטבלאות מאוחדות, עם שמות עמודות נקיים מהמקור"
+  },
+  "credit": {
+    "source": "anthropics/skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache 2.0"
   }
 }

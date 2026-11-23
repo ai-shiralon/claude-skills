@@ -28,5 +28,10 @@
   "example": {
     "in": "הקובץ הזה יצא מעוות מהמערכת, תסדר אותו ותוסיף סיכום חודשי",
     "out": "טבלה נקייה עם עמודות מתוקנות, נוסחת סיכום לחודש, וגיליון נפרד עם הדגשות"
+  },
+  "credit": {
+    "source": "anthropics/skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache 2.0"
   }
 }

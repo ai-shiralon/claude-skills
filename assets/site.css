@@ -438,3 +438,6 @@ details.faq[open] summary{color:var(--gold)}
 
 /* hero photo replaces the constellation collage */
 .constellation{display:none}
+
+.credit{font-size:.85rem; margin-top:26px}
+.credit a{color:var(--muted); text-decoration:underline}

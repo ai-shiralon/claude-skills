@@ -12,20 +12,28 @@ import sys
 
 import numpy as np
 from bidi.algorithm import get_display
+from PIL import features as _features
+_disp = (lambda t: t) if _features.check("raqm") else get_display
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from common import CATALOG, CATEGORIES, OG_DIR, ROOT, category_of, load_internal, load_json
 import render_hub
 
 W, H = 1200, 630
-BG = (15, 17, 21)
-INK, MUTED, GOLD, LINE = (243, 245, 248), (176, 184, 198), (255, 211, 110), (38, 43, 52)
-FONTS = r"C:\Windows\Fonts"
-TITLE_FONT, BODY_FONT, EMOJI_FONT = rf"{FONTS}\Rubik-Bold.ttf", rf"{FONTS}\Rubik-Regular.ttf", rf"{FONTS}\seguiemj.ttf"
-TITLE_MAX, TITLE_MIN, TAG_PT, BRAND_PT, ICON_PT = 92, 54, 38, 30, 120
+BG = (17, 19, 27)
+INK, MUTED, GOLD, LINE = (251, 244, 234), (185, 176, 164), (238, 154, 112), (43, 48, 66)
+import os
+_W = r"C:\Windows\Fonts"
+_L = "/usr/share/fonts/truetype/noto"
+if os.path.isdir(_W):
+    TITLE_FONT, BODY_FONT = rf"{_W}\Rubik-Bold.ttf", rf"{_W}\Rubik-Regular.ttf"
+else:
+    TITLE_FONT, BODY_FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+EMOJI_FONT = os.path.expanduser("~/.local/share/fonts/NotoColorEmoji.ttf")
+TITLE_MAX, TITLE_MIN, TAG_PT, BRAND_PT, ICON_PT = 92, 54, 38, 30, 109
 TEXT_W = 1000
-DESIGN = "og-v2"
-BRAND = "בין קודש לקלוד · סקילים ל-Claude Code"
+DESIGN = "og-v3"
+BRAND = "AI Transformation · סקילים ל-Claude Code"
 JPEG_Q = 90
 # external skill pages (own repos) whose index.html links an image from here; end-session has its own
 EXTERNAL = ("claude-video-skills", "claude-shiur-editor-skill", "school-equipment-list")
@@ -35,7 +43,7 @@ def glow(img):
     """Two soft colour fields behind the type, like the site's aurora."""
     y, x = np.mgrid[0:H, 0:W].astype(np.float32)
     a = np.asarray(img, np.float32)
-    for (cx, cy, r, col, k) in ((960, 40, 520, (255, 190, 80), 0.20), (180, 620, 560, (90, 120, 255), 0.14)):
+    for (cx, cy, r, col, k) in ((960, 40, 520, (238, 154, 112), 0.22), (180, 620, 560, (150, 120, 220), 0.14)):
         w = np.clip(1 - ((x - cx) ** 2 + (y - cy) ** 2) / r ** 2, 0, 1) ** 2 * k
         a = a * (1 - w[..., None]) + np.array(col, np.float32) * w[..., None]
     return Image.fromarray(a.clip(0, 255).astype(np.uint8))
@@ -50,7 +58,7 @@ def wrap(text, font, width):
             words.append(word)
     for word in words:
         trial = f"{cur} {word}".strip()
-        if cur and font.getlength(get_display(trial)) > width:
+        if cur and font.getlength(_disp(trial)) > width:
             lines.append(cur)
             cur = word
         else:
@@ -59,12 +67,12 @@ def wrap(text, font, width):
 
 
 def centred(draw, y, text, font, fill):
-    draw.text((W / 2, y), get_display(text), font=font, fill=fill, anchor="mm")
+    draw.text((W / 2, y), _disp(text), font=font, fill=fill, anchor="mm")
 
 
 def title_font(title):
     pt = TITLE_MAX
-    while pt > TITLE_MIN and ImageFont.truetype(TITLE_FONT, pt).getlength(get_display(title)) > TEXT_W:
+    while pt > TITLE_MIN and ImageFont.truetype(TITLE_FONT, pt).getlength(_disp(title)) > TEXT_W:
         pt -= 2
     return ImageFont.truetype(TITLE_FONT, pt)
 

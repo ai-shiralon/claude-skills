@@ -28,5 +28,10 @@
   "example": {
     "in": "כל פעם אני מסבירה לך מחדש איך לכתוב פוסט בסגנון שלי. תהפוך את זה לסקיל",
     "out": "סקיל חדש בשם שתבחרו, עם ההנחיות שלכם, דוגמאות, ובדיקה שהוא מופעל ומייצר את הסגנון הנכון"
+  },
+  "credit": {
+    "source": "anthropics/skills",
+    "url": "https://github.com/anthropics/skills",
+    "license": "Apache 2.0"
   }
 }
